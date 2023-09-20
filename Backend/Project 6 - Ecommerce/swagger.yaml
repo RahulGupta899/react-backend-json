@@ -1,0 +1,325 @@
+openapi: 3.0.0
+info:
+  title: Ecommerce
+  description: APIs store
+  contact:
+    email: rahul.gupta@omindtech.com
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Localhost server
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+paths:
+  
+  /user/signup:
+    post:
+      tags:
+        - User
+      summary: "User registration Route. Mandatory fields Photo, Name, Email, Password.
+                After Successful User creation sets a Cookie Token"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        content: 
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: email
+                password:
+                  type: string
+                  format: password
+                photo:
+                  type: string
+                  format: binary              
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      _id: 
+                        type: string
+                      token:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id: 
+                            type: string
+                          secure_Url: 
+                            type: string
+        401:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /user/login:
+    post:
+      tags:
+        - User
+      summary: "User Login Route."
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: email
+                  default: 'testuser@gmail.com'
+                password:
+                  type: string
+                  format: password
+                  default: 'qwerty123'
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+  
+  /user/logout:
+    get:
+      tags:
+        - User
+      summary: "User Logout Route."
+      description: 'Some additional info coming up...'
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+
+  /user/forgotPassword:
+    post:
+      tags:
+        - User
+      summary: "User Forget Password Route."
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  default: "rgupta.jan@gmail.com"
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+
+  /user/password/reset/{forgotToken}:
+    post:
+      tags:
+        - User
+      summary: "Password Reset Route."
+      parameters:
+        - name: forgotToken
+          in: path
+          required: true
+          schema: 
+            type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  default: "new Password"
+                confirmPassword:
+                  type: string
+                  default: "new Password"
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+      
+  /user/user-dashboard:
+    get:
+      tags:
+        - User
+      summary: "User Dashboard Route."
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+
+  /user/change-password:
+    post:
+      tags:
+        - User
+      summary: "Change Personal Password Route."
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                  default: 'Current Password'
+                newPassword:
+                  type: string
+                  default: 'New Password'
+                confirmPassword:
+                  type: string
+                  default: 'New Password'
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+
+  /user/update-user-info:
+    post:
+      tags:
+        - User
+      summary: "Update Personal Infomation Route."
+      requestBody:
+        required: true
+        content: 
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: email
+                  photo:
+                    type: string
+                    format: binary 
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+
+  /admin/all-users:
+    get:
+      tags:
+        - Admin
+      summary: "List of all users that has role user"
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+  
+  /admin/get-single-user/{id}: 
+    get:
+      tags:
+        - Admin
+      summary: "Get a single user"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: string
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+
+  /admin/update-single-user/{id}:
+    put:
+      tags:
+        - Admin
+      summary: "Update a Single user"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: string
+      requestBody:
+        required: true
+        content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  role:
+                    type: string
+                  
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+  
+  /admin/delete-single-user/{id}: 
+    delete:
+      tags:
+        - Admin
+      summary: "Delete a single user"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: string
+      responses:
+        200:
+          description: Success
+        500:
+          description: Failed
+
+  

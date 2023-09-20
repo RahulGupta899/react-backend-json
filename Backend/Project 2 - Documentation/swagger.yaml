@@ -1,0 +1,293 @@
+openapi: 3.0.0
+info:
+  title: OPEN API 
+  description: understanding open API with the help of swagger
+  version: 1.0.0
+  contact:
+    email: rahul.gupta@omindtech.com
+    # url: 'https://myblog.com'
+
+# servers:
+#   - url: https://localhost:5000/api/v1
+#     description: Localhost (secured)
+#   - url: http://localhost:5000/api/v1
+#     description: Localhost (regular)
+
+servers:
+  - url: "{protocol}://localhost:5000/api/{version}"
+    description: Localhost server
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      version:
+        enum:
+          - v1
+          - v2
+        default: v1
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+paths:
+
+  /courses-string:
+    get:
+      tags:
+        - Courses
+      summary: "returns course launching message, type of response from server: string type"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+  
+  /courses-object:
+    get:
+      tags:
+        - Courses
+      summary: "returns a static dummy course object. Type of response: Object"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  instructor:
+                    type: string
+                  price:
+                    type: number
+                  
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+  
+  /courses-array: 
+    get:
+      tags:
+        - Courses
+      summary: "returns list of courses available. Type of response: Array of objects"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    instructor:
+                      type: string
+                    price:
+                      type: number
+                  
+                
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+
+  #Example of req.params
+  /course/{id}: 
+    get:
+      tags:
+        - Request with info
+      summary: "returns the course that matches the id passed in parameter"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          default: 333
+          schema: 
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+                  instructor:
+                    type: string
+                  price:
+                    type: number
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+  
+  #Examples of req.body
+  /add-course:
+    post:
+      tags:
+        - Request with info
+      summary: "Adds the new course, i.e passed via request body. Type of response: boolean"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                name:
+                  type: string
+                instructor:
+                  type: string
+                price:
+                  type: number
+      responses:
+        200:
+          description: All good success
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  #Example of req.query
+  /course-search: 
+    get:
+      tags:
+        - Request with info
+      summary: "Three queries is passed out of which Price query is use to find the course. 
+                Info is attached to request query. Type of response: Object"
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema: 
+            type: string
+            enum: [west Bengal, London, Delhi]
+        - name: device
+          in: query
+          required: true
+          schema: 
+            type: string
+            enum: [web, mobile, tablet]
+        - name: price
+          in: query
+          required: true
+          default: 199
+          schema:
+            type: number
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  location:
+                    type: string
+                  device:
+                    type: string
+                  course:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      instructor:
+                        type: string
+                      price:
+                        type: number
+                     
+        404:
+          description: Course Not found
+        500:
+          description: Internal server error
+
+  #Example of fileupload in nodejs using
+  /course-upload: 
+    post:
+      tags:
+        - Request with file
+      summary: "Takes a image file from request files and stores that in server resource folder.
+                Type of response: json"
+      requestBody:
+        content: 
+          multipart/form-data:
+            schema: 
+              type: object
+              properties:
+                sampleFile:
+                  type: string
+                  format: binary
+
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  fileName:
+                    type: string
+        404:
+          description: Course Not found
+        500:
+          description: Internal server error
+
+  #Request headers
+  /course-header: 
+    post:
+      tags:
+        - Request with headers
+      summary: "Attaching header in request headers."
+      parameters:
+        - in: header
+          name: auth
+          default: '#45somethingUNSOLICITEDdata#123'
+
+      responses:
+        200:
+          description: Success        
+        404:
+          description: Course Not found
+        500:
+          description: Internal server error
+                
+
+  

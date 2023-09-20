@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  title: Social App
+  description: Application to track all the social media meta data
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local server for development
+  - url: http://social-app.org
+    description: Main server (Live)
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+paths:
+  
+  /instagram:
+    get:
+      summary: returns username, followers, follows and access time
+      responses:
+        '200': # status code
+          description:  returns an object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  followers:
+                    type: string
+                  follows:
+                    type: string
+                  accessTime:
+                    type: string
+  
+  /{id}:
+    get:
+      summary: returns whatever there in URL
+      parameters:
+        - name: id
+          default: 5
+          in: path
+          schema:
+            type: string
+      responses:
+        '200': # status code
+          description:  returns an object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  params:
+                    type: string
+                  
+  /facebook:
+    get:
+      summary: returns username, followers, follows and access time
+      responses:
+        '200': # status code
+          description:  returns an object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  followers:
+                    type: string
+                  follows:
+                    type: string
+                  accessTime:
+                    type: string
+  
+  /linkedin:
+    get:
+      summary: returns username, followers, follows and access time
+      responses:
+        '200': # status code
+          description:  returns an object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  followers:
+                    type: string
+                  follows:
+                    type: string
+                  accessTime:
+                    type: string
+          
+

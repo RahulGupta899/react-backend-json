@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Form</title>
+</head>
+<body>
+    <h1>GET FORM</h1>
+     <form method="get" action="/myget">    <!-- When this form will be submitted,  -->
+        <label>User Name: </label>          <!-- Localhost:5000/myget?userName="text"&password="text"-->
+        <input type="text" name="userName"> <!-- will be triggred  -->
+        <br>
+        <label>Password: </label>
+        <input type="text" name="password"> <!-- Input names will be passed in form of query  -->
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

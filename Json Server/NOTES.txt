@@ -1,0 +1,90 @@
+By default these routes are created
+    http://localhost:3000/products
+    http://localhost:3000/reviews
+
+Items are directly accessible like this
+    http://localhost:3000/products/2
+
+Quering 
+    http://localhost:3000/products/?category=electronics&discount.type=shipping
+
+Sorting data before fetching
+    http://localhost:3000/products?_sort=price      
+    http://localhost:3000/products?_sort=price&_order=desc
+    http://localhost:3000/products?_sort=price,category&_order=desc,asc [Composite Sort]
+
+Pagination
+    http://localhost:3000/products?_page=4&_limit=3
+
+Query by operator
+    http://localhost:3000/products?price_gte=3000&price_lte=5000   [greater than equal to, less than equal to ]
+    http://localhost:3000/products?price_ne=4000                   [not equal to]
+    http://localhost:3000/products?category_like=^f                [regex based, whose category start with letter f]
+
+
+Relationships (Including other resources via foreign key)
+    - Including Children resources in Parent
+      http://localhost:3000/products?_embed=reviews
+      http://localhost:3000/products/1?_embed=reviews
+    
+    - Including Parent resources in Children
+      http://localhost:3000/reviews?_expand=product
+
+
+POST Request (Test it from postman)
+    - Adding a Prouct 
+        localhost:3000/products
+    - Body
+        {
+            "id": 11,
+            "title": "Product 11",
+            "category": "electronics",
+            "price": 3000,
+            "description": "This is description about product 11",
+            "discount": {
+                "type": "packed"
+            }
+        }
+
+PUT Request                                [Need to pass entire object in the body]
+    - updating product 9
+        localhost:3000/products/9
+    - Body                     
+        {
+            "id": 9,
+            "title": "Product 9",
+            "category": "accessories",
+            "price": 4000,
+            "description": "TThis is some dummy description for procduct 9"
+        }
+
+PATCH Request                       [Just pass the Key-pair] [No need to send the entire object]
+    - updating product 9
+        localhost:3000/products/9
+    - Body
+        {
+            price: 54000
+        }
+
+DELETE Request
+    - Deleting product 8
+        localhost:3000/products/8
+
+Changing the PORT 
+    - inside package.json > scripts 
+        "serve-json": "json-server --watch db.json --port 4000"
+
+Making custom routes
+    - configure the package.json file
+        "serve-json": "json-server --watch db.json --port 4000 --routes routes.json"
+    - create routes.json file and define custom routes
+        
+Generate Random data
+    - configure the package.json file
+        "serve-json": "json-server -watch data.js --port 4000"
+    - create data.js file
+        
+
+    
+
+
